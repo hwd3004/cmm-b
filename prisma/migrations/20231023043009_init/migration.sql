@@ -20,7 +20,7 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Board" (
     "id" SERIAL NOT NULL,
-    "name" VARCHAR(50) NOT NULL,
+    "name" VARCHAR(30) NOT NULL,
     "slug" VARCHAR(30) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE "Post" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "authorId" INTEGER NOT NULL,
     "parentBoardId" INTEGER NOT NULL,
-    "categoryId" INTEGER NOT NULL,
+    "categoryId" INTEGER,
 
     CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
 );
@@ -60,7 +60,6 @@ CREATE TABLE "Post" (
 CREATE TABLE "Category" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(20) NOT NULL,
-    "slug" VARCHAR(30) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "parentBoardId" INTEGER NOT NULL,
@@ -116,7 +115,7 @@ CREATE UNIQUE INDEX "Board_name_key" ON "Board"("name");
 CREATE UNIQUE INDEX "Board_slug_key" ON "Board"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Category_parentBoardId_name_slug_key" ON "Category"("parentBoardId", "name", "slug");
+CREATE UNIQUE INDEX "Category_parentBoardId_name_key" ON "Category"("parentBoardId", "name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Like_parentPostId_likedUserId_key" ON "Like"("parentPostId", "likedUserId");
@@ -137,7 +136,7 @@ ALTER TABLE "Post" ADD CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") 
 ALTER TABLE "Post" ADD CONSTRAINT "Post_parentBoardId_fkey" FOREIGN KEY ("parentBoardId") REFERENCES "Board"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Post" ADD CONSTRAINT "Post_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Post" ADD CONSTRAINT "Post_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Category" ADD CONSTRAINT "Category_parentBoardId_fkey" FOREIGN KEY ("parentBoardId") REFERENCES "Board"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

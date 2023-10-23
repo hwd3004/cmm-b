@@ -6,7 +6,7 @@ import { protectedResolver } from "@/users/users.util";
 
 const resolver = async (parent, args: Category, context: ResolverContext, info): Promise<MutationResponse> => {
   try {
-    const { name, slug, parentBoardId } = args;
+    const { name, parentBoardId } = args;
     const { loggedInUser } = context;
 
     // loggedInUser가 board의 boardManager인지 확인
@@ -31,7 +31,6 @@ const resolver = async (parent, args: Category, context: ResolverContext, info):
     await prisma.category.create({
       data: {
         name,
-        slug,
         parentBoardId: Number(parentBoardId),
       },
     });

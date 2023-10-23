@@ -23,15 +23,14 @@ const resolver = async (parent, args: Board, context: ResolverContext, info): Pr
 
     boardId = board.id;
 
-    const category = prisma.category.create({
-      data: {
-        name: "General",
-        slug: "General",
-        parentBoardId: board.id,
-      },
-    });
+    // const category = prisma.category.create({
+    //   data: {
+    //     name: "General",
+    //     parentBoardId: board.id,
+    //   },
+    // });
 
-    const boardManager = prisma.boardManager.create({
+    await prisma.boardManager.create({
       data: {
         user: {
           connect: {
@@ -47,7 +46,7 @@ const resolver = async (parent, args: Board, context: ResolverContext, info): Pr
       },
     });
 
-    await prisma.$transaction([category, boardManager]);
+    // await prisma.$transaction([category, boardManager]);
 
     return {
       result: true,
@@ -55,10 +54,7 @@ const resolver = async (parent, args: Board, context: ResolverContext, info): Pr
   } catch (error) {
     console.trace(error);
 
-    const errorMap = new Map<string, string>([
-      ["name", "Name already exists."],
-      ["slug", "Slug already exists."],
-    ]);
+    const errorMap = new Map<string, string>([["name", "Name already exists."]]);
 
     if (error instanceof PrismaClientKnownRequestError && error.code == "P2002") {
       if (error.meta && error.meta.target) {

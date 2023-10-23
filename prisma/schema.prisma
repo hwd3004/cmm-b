@@ -99,7 +99,6 @@ model Post {
 model Category {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(20)
-  slug String @db.VarChar(20)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -109,7 +108,7 @@ model Category {
 
   posts Post[]
 
-  @@unique([parentBoardId, name, slug])
+  @@unique([parentBoardId, name])
 }
 
 model Comment {

@@ -4,18 +4,18 @@ const typeDefs = `#graphql
     name: String!
     slug: String!
 
-    createdAt: String
-    updatedAt: String
+    createdAt: String!
+    updatedAt: String!
 
-    categories: [Category]
+    categories: [Category]!
 
-    posts: [Post]
+    posts: [Post]!
 
-    boardManagers: [BoardManager]
+    boardManagers: [BoardManager]!
   }
 
   type Query {
-    getBoards: [Board]
+    getBoards: [Board]!
   }
 
   type Mutation {

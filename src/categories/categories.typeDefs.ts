@@ -9,7 +9,7 @@ const typeDefs = `#graphql
 
     parentBoard: Board!
 
-    posts: [Post]
+    posts: [Post]!
   }
 `;
 

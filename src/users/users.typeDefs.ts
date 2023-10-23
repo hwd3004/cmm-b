@@ -1,17 +1,23 @@
 const typeDefs = `#graphql
   type User {
-    id: ID
-    username: String
-    password: String
+    id: ID!
+    username: String!
+    password: String!
     confirmPassword: String
     email: String
 
-    createdAt: String
-    updatedAt: String
+    createdAt: String!
+    updatedAt: String!
 
-    role: String
+    role: String!
 
-    writtenPosts: [Post]
+    writtenPosts: [Post]!
+    writtenComments: [Comment]!
+
+    likedPosts: [Post]!
+    dislikedPosts: [Post]!
+
+    managedBoards: [BoardManager]!
   }
 `;
 

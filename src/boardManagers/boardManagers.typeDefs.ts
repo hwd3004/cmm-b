@@ -2,14 +2,14 @@ const typeDefs = `#graphql
   type BoardManager {
     id: ID!
 
-    createdAt: String
-    updatedAt: String
+    createdAt: String!
+    updatedAt: String!
 
-    managerRole: String
+    managerRole: String!
 
-    managedBoard: Board
+    managedBoard: Board!
 
-    user: User
+    user: User!
   }
 `;
 

@@ -29,8 +29,8 @@ model User {
   writtenPosts    Post[]    @relation("WrittenPosts")
   writtenComments Comment[] @relation("WrittenComments")
 
-  likes    Like[]
-  dislikes Dislike[]
+  likedPosts    Like[]
+  dislikedPosts Dislike[]
 
   managedBoards BoardManager[]
 }

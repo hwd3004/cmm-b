@@ -6,8 +6,8 @@ const typeDefs = `#graphql
     viewCount: Int!
     isDeleted: Boolean!
 
-    createdAt: String
-    updatedAt: String
+    createdAt: String!
+    updatedAt: String!
 
     author: User!
 
@@ -15,8 +15,8 @@ const typeDefs = `#graphql
 
     comments: [Comment]
 
-    likes: [Like]
-    dislikes: [Dislike]
+    likes: [Like]!
+    dislikes: [Dislike]!
 
     category: Category!
   }

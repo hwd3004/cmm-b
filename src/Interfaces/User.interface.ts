@@ -21,6 +21,9 @@ interface User {
   writtenPosts: [Post];
   writtenComments: [Comment];
 
+  likedPosts: [Post];
+  dislikedPosts: [Post];
+
   managedBoards: [BoardManager];
 }
 

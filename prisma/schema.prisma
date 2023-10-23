@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  username String  @unique @db.VarChar(20)
+  password String
+  email    String? @unique @db.VarChar(30)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  role Role @default(USER)
+
+  writtenPosts    Post[]    @relation("WrittenPosts")
+  writtenComments Comment[] @relation("WrittenComments")
+
+  likes    Like[]
+  dislikes Dislike[]
+
+  managedBoards BoardManager[]
+}
+
+model Board {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(50)
+  slug String @unique @db.VarChar(30)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categories Category[] @relation("categoriesOnBoard")
+
+  posts Post[]
+
+  boardManagers BoardManager[]
+}
+
+enum ManagerRole {
+  Owner
+  Moderator
+}
+
+model BoardManager {
+  id Int @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  managerRole ManagerRole
+
+  managedBoard   Board @relation(fields: [managedBoardId], references: [id])
+  managedBoardId Int
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+model Post {
+  id        Int     @id @default(autoincrement())
+  title     String  @db.VarChar(100)
+  content   String  @db.VarChar(10000)
+  viewCount Int     @default(0)
+  isDeleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author   User @relation("WrittenPosts", fields: [authorId], references: [id])
+  authorId Int
+
+  parentBoard   Board @relation(fields: [parentBoardId], references: [id])
+  parentBoardId Int
+
+  comments Comment[]
+
+  likes    Like[]
+  dislikes Dislike[]
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(20)
+  slug String @db.VarChar(30)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parentBoard   Board @relation("categoriesOnBoard", fields: [parentBoardId], references: [id])
+  parentBoardId Int
+
+  posts Post[]
+}
+
+model Comment {
+  id      Int    @id @default(autoincrement())
+  content String @db.VarChar(300)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author   User @relation("WrittenComments", fields: [authorId], references: [id])
+  authorId Int
+
+  parentPost   Post @relation(fields: [parentPostId], references: [id])
+  parentPostId Int
+
+  parentCommentId Int?
+}
+
+model Like {
+  id Int @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parentPost   Post @relation(fields: [parentPostId], references: [id])
+  parentPostId Int
+
+  likedUser   User @relation(fields: [likedUserId], references: [id])
+  likedUserId Int
+
+  // https://pyh.netlify.app/prisma/start_prisma_with_model/
+  // model에 여러개의 field를 조합해서 하나의 unique를 만듦
+  // [title, author]로 unique를 만들었다면 title1, author1를 생성하고 또 title1, author1을 만들 수 없음.
+  // 대신 title1, author2는 만들 수 있음
+  @@unique([parentPostId, likedUserId])
+}
+
+model Dislike {
+  id Int @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parentPost   Post @relation(fields: [parentPostId], references: [id])
+  parentPostId Int
+
+  dislikedUser   User @relation(fields: [dislikedUserId], references: [id])
+  dislikedUserId Int
+
+  @@unique([parentPostId, dislikedUserId])
+}

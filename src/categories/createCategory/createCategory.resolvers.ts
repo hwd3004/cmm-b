@@ -9,12 +9,39 @@ const resolver = async (parent, args: Category, context: ResolverContext, info):
     const { name, slug, parentBoardId } = args;
     const { loggedInUser } = context;
 
-    // 사용자가 board의 board manager인지 확인
+    // loggedInUser가 board의 boardManager인지 확인
+    await prisma.board.findUniqueOrThrow({
+      where: {
+        id: Number(parentBoardId),
+        boardManagers: {
+          some: {
+            userId: loggedInUser.id,
+          },
+        },
+      },
+      select: {
+        boardManagers: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
+
+    await prisma.category.create({
+      data: {
+        name,
+        slug,
+        parentBoardId: Number(parentBoardId),
+      },
+    });
 
     return {
       result: true,
     };
   } catch (error) {
+    console.trace(error);
+
     return {
       result: false,
       error: "Failed to create category.",

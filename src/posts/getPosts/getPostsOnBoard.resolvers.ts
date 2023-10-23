@@ -9,6 +9,14 @@ const resolver = async (parent, args: Post, context, info) => {
         parentBoardId: Number(parentBoardId),
         isDeleted: false,
       },
+      include: {
+        author: true,
+        parentBoard: true,
+        category: true,
+        comments: true,
+        likes: true,
+        dislikes: true,
+      },
     });
 
     return posts;

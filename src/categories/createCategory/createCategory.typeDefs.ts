@@ -1,6 +1,6 @@
 const typeDefs = `#graphql
   type Mutation {
-    createCategory(name: String!, slug: String!): MutationResponse!
+    createCategory(name: String!, slug: String!, parentBoardId: ID!): MutationResponse!
   }
 `;
 

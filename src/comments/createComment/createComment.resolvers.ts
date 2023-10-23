@@ -31,7 +31,6 @@ const resolver = async (parent, args: Comment, context: ResolverContext, info): 
     };
   } catch (error) {
     console.trace(error);
-    console.log(error);
 
     return {
       result: false,

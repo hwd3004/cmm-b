@@ -1,9 +1,14 @@
-import Board from "@/Interfaces/Board.interface";
 import prisma from "@/prisma";
 
 const resolver = async (parent, args, context, info) => {
   try {
-    const boards = await prisma.board.findMany();
+    const boards = await prisma.board.findMany({
+      include: {
+        categories: true,
+        posts: true,
+        boardManagers: true,
+      },
+    });
 
     return boards;
   } catch (error) {

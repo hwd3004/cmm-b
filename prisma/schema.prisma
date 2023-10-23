@@ -37,7 +37,7 @@ model User {
 
 model Board {
   id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(50)
+  name String @unique @db.VarChar(30)
   slug String @unique @db.VarChar(30)
 
   createdAt DateTime @default(now())
@@ -91,14 +91,15 @@ model Post {
   likes    Like[]
   dislikes Dislike[]
 
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId Int
+  // 카테고리가 존재하지 않는 포스트 가능.
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId Int?
 }
 
 model Category {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(20)
-  slug String @db.VarChar(30)
+  slug String @db.VarChar(20)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -107,6 +108,8 @@ model Category {
   parentBoardId Int
 
   posts Post[]
+
+  @@unique([parentBoardId, name, slug])
 }
 
 model Comment {
